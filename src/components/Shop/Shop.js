@@ -8,14 +8,14 @@ import { Link } from "react-router-dom";
 
 const Shop = () => {
   const [products, setProducts] = useState([]);
-  const [cart, setCart] = useCart(products);
+  const [cart, setCart] = useCart();
   const [page, setPage] = useState(0);
   const [pageCount, setPageCount] = useState(0);
   // products to be rendered on the UI
   const [displayProducts, setDisplayProducts] = useState([]);
-
+  const size = 10;
   useEffect(() => {
-    fetch("http://localhost:5000/products")
+    fetch(`http://localhost:5000/products?page=${page}&&size=${size}`)
       .then((res) => res.json())
       .then((data) => {
         setProducts(data.products);
@@ -25,7 +25,7 @@ const Shop = () => {
         console.log("count and num", count, pageNumber);
         setPageCount(pageNumber);
       });
-  }, []);
+  }, [page]);
 
   const handleAddToCart = (product) => {
     const exists = cart.find((pd) => pd.key === product.key);
@@ -76,10 +76,10 @@ const Shop = () => {
             {[...Array(pageCount).keys()].map((number) => (
               <button
                 className={number === page ? "selected" : ""}
-                key={number}
+                key={number + 1}
                 onClick={() => setPage(number)}
               >
-                {number}
+                {number + 1}
               </button>
             ))}
           </div>
